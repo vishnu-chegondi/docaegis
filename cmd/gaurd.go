@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -26,18 +25,23 @@ var gaurdCmd = &cobra.Command{
 }
 
 func createLinks(path string) {
-	pwd, err := os.Getwd()
+	absPath, err := filepath.Abs(path)
 	logFatal(err)
 
-	absPath, err := filepath.Abs(path)
-	basePath := filepath.Base(path)
+	hardLinkPath := getHardLinkPath(path)
+	// fmt.Println(absPath, hardLinkPath)
+	err = os.Link(absPath, hardLinkPath)
 	logFatal(err)
+}
+
+func getHardLinkPath(path string) string {
+	pwd := filepath.Dir(path)
 	aegisPath := pwd + "/.aegis/"
 	if _, err := os.Stat(aegisPath); errors.Is(err, os.ErrNotExist) {
 		err = os.Mkdir(aegisPath, 0644)
 		logFatal(err)
 	}
-	fmt.Println(absPath, pwd+"/.aegis/"+basePath)
-	// err = os.Link(absPath, pwd+"/.aegis/"+basePath)
-	// logFatal(err)
+	basePath := filepath.Base(path)
+	hardLinkPath := aegisPath + basePath
+	return hardLinkPath
 }
