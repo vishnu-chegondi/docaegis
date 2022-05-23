@@ -26,3 +26,12 @@ To list all the directories and files which are guarded.
 - **Input:** Sub command which takes input as path to directory/file which should be protected from deleting.
 - **Working:** Create a hidden directory *.aegis* in the base directory of given file/directory.
 - **How:** When a user deletes the directory by mistake we need to run recover subcommand to recreate the directory.
+
+
+## File info
+
+* filename
+* permissions
+* ownership
+
+These data needs to be stored in database.
