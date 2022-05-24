@@ -2,8 +2,10 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
+	"syscall"
 
 	"github.com/spf13/cobra"
 )
@@ -26,6 +28,7 @@ var gaurdCmd = &cobra.Command{
 
 func createLinks(path string) {
 	absPath, err := filepath.Abs(path)
+	getFileDetails(absPath)
 	logFatal(err)
 
 	hardLinkPath := getHardLinkPath(path)
@@ -36,12 +39,21 @@ func createLinks(path string) {
 
 func getHardLinkPath(path string) string {
 	pwd := filepath.Dir(path)
-	aegisPath := pwd + "/.aegis/"
+	aegisPath, err := filepath.Abs(pwd + "/.aegis/")
+	logFatal(err)
 	if _, err := os.Stat(aegisPath); errors.Is(err, os.ErrNotExist) {
 		err = os.Mkdir(aegisPath, 0644)
 		logFatal(err)
 	}
 	basePath := filepath.Base(path)
-	hardLinkPath := aegisPath + basePath
+	hardLinkPath := aegisPath + "/" + basePath
 	return hardLinkPath
+}
+
+func getFileDetails(path string) {
+	fileInfo, err := os.Stat(path)
+	logFatal(err)
+	// Name, Mode, Ownership
+	fmt.Printf("Group ID: %d\n", int(fileInfo.Sys().(*syscall.Stat_t).Gid))
+	fmt.Printf("User ID: %d\n", int(fileInfo.Sys().(*syscall.Stat_t).Uid))
 }
