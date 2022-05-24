@@ -41,3 +41,12 @@ func CreateTable() {
 	err = tnx.Commit()
 	logFatal(err)
 }
+
+func InsertFileInfo(values ...interface{}) {
+	var query string = "INSERT INTO file_info (file_path, hard_link_path, permissions, uid, gid) VALUES (?,?,?,?,?)"
+	tnx := getTnx()
+	_, err := tnx.Exec(query, values...)
+	logFatal(err)
+	err = tnx.Commit()
+	logFatal(err)
+}

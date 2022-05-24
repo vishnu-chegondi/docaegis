@@ -29,6 +29,7 @@ var gaurdCmd = &cobra.Command{
 func createLinks(path string) {
 	absPath, err := filepath.Abs(path)
 	getFileDetails(absPath)
+	// InsertFileInfo()
 	logFatal(err)
 
 	hardLinkPath := getHardLinkPath(path)
