@@ -34,8 +34,7 @@ func getTnx() *sql.Tx {
 
 // Used for creating the initial Table where data is stored regarding
 func CreateTable() {
-	var query string = "CREATE TABLE IF NOT EXISTS test_table (column_1 TEXT PRIMARY_KEY,column_2 TEXT NOT NULL,column_3 data_type DEFAULT 0,table_constraints)"
-
+	var query string = "CREATE TABLE IF NOT EXISTS file_info (file_path TEXT PRIMARY_KEY,hard_link_path TEXT NOT NULL,permissions INTEGER DEFAULT 644, uid INTEGER DEFAULT 0, gid INTEGER DEFAULT 0)"
 	tnx := getTnx()
 	_, err := tnx.Exec(query)
 	logFatal(err)
