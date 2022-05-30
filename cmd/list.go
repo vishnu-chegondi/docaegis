@@ -18,5 +18,5 @@ var listCmd = &cobra.Command{
 // Function to connect to database and list all the
 // gaurded files which are gaurded
 func listGaurdedFiles() {
-	GetFilesGaurded()
+	GetAllFilesGaurded()
 }

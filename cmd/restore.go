@@ -1,15 +1,20 @@
 package cmd
 
 import (
+	"io/fs"
 	"os"
-	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
 
+var restorePath string
+
 func init() {
 	CreateTable()
 	rootCmd.AddCommand(restoreCmd)
+	restore := restoreCmd.Flags()
+	restore.StringVarP(&restorePath, "file", "f", "", "File/Directory which should be restored")
+	cobra.MarkFlagRequired(restore, "restore")
 }
 
 var restoreCmd = &cobra.Command{
@@ -18,21 +23,17 @@ var restoreCmd = &cobra.Command{
 	Long: `This command is used to restore accidentally deleted
 		files from hard links created using gaurd sub command`,
 	Run: func(cmd *cobra.Command, args []string) {
-		for _, arg := range args {
-			recoverFromLink(arg)
-		}
+		recoverFromLink(restorePath)
 	},
 }
 
 func recoverFromLink(path string) {
-	absPath, err := filepath.Abs(path)
+	var fileInfo FileInfoRow = GetFileInfo(path)
+	byteData, err := os.ReadFile(fileInfo.HardLinkPath)
 	logFatal(err)
-	// TODO: Recover from database the hardlink path, permissions, owner,group.
-
-	hardLinkPath := getHardLinkPath(path)
-
-	byteData, err := os.ReadFile(hardLinkPath)
+	err = os.WriteFile(fileInfo.FilePath, byteData, fs.FileMode(fileInfo.Permissions))
 	logFatal(err)
-	err = os.WriteFile(absPath, byteData, 0644)
+	file, err := os.Open(fileInfo.FilePath)
 	logFatal(err)
+	file.Chown(fileInfo.UID, fileInfo.GID)
 }

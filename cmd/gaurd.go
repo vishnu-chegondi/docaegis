@@ -9,13 +9,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var filePath string
+var sourcePath string
 
 func init() {
 	CreateTable()
 	rootCmd.AddCommand(gaurdCmd)
 	source := gaurdCmd.Flags()
-	source.StringVarP(&filePath, "source", "s", "", "File/Directory which should be gaurded")
+	source.StringVarP(&sourcePath, "source", "s", "", "File/Directory which should be gaurded")
 	cobra.MarkFlagRequired(source, "source")
 }
 
@@ -24,7 +24,7 @@ var gaurdCmd = &cobra.Command{
 	Short: "Protect the given file/directory from accidental termination",
 	Long:  "This creates the hardlinks to given directory or file.",
 	Run: func(cmd *cobra.Command, args []string) {
-		createLinks(filePath)
+		createLinks(sourcePath)
 	},
 }
 

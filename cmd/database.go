@@ -66,19 +66,26 @@ func InsertFileInfo(values ...interface{}) {
 	logFatal(err)
 }
 
-func GetFilesGaurded() {
-	var query string = "SELECT * from file_info"
+func GetAllFilesGaurded() {
+	var query string = "SELECT file_path from file_info"
 	tnx := getTnx()
 	rows, err := tnx.Query(query)
 	logFatal(err)
 	for rows.Next() {
-		var ansrows FileInfoRow
-		columnArray := ansrows.GetFileRowArray()
-		err = rows.Scan(columnArray...)
+		var filePath string
+		err = rows.Scan(&filePath)
 		logFatal(err)
-		// resultRow, err := json.Marshal(ansrows)
-		// logFatal(err)
-		// fmt.Println(string(resultRow))
-		fmt.Println(ansrows.FilePath)
+		fmt.Println(filePath)
 	}
+}
+
+func GetFileInfo(filePath string) FileInfoRow {
+	var query string = "SELECT * from file_info where file_path=?"
+	tnx := getTnx()
+	row := tnx.QueryRow(query, filePath)
+	var ansrows FileInfoRow
+	columnArray := ansrows.GetFileRowArray()
+	err := row.Scan(columnArray...)
+	logFatal(err)
+	return ansrows
 }
