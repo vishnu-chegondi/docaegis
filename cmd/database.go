@@ -8,6 +8,20 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+type FileInfoRow struct {
+	FilePath     string
+	HardLinkPath string
+	Permissions  int
+	UID          int
+	GID          int
+}
+
+func (f *FileInfoRow) GetFileRowArray() []interface{} {
+	var columnArray []interface{}
+	columnArray = append(columnArray, &f.FilePath, &f.HardLinkPath, &f.Permissions, &f.UID, &f.GID)
+	return columnArray
+}
+
 func GetDbLocation() string {
 	var dbLocation string
 	switch runtime.GOOS {
@@ -57,5 +71,14 @@ func GetFilesGaurded() {
 	tnx := getTnx()
 	rows, err := tnx.Query(query)
 	logFatal(err)
-	fmt.Print(rows)
+	for rows.Next() {
+		var ansrows FileInfoRow
+		columnArray := ansrows.GetFileRowArray()
+		err = rows.Scan(columnArray...)
+		logFatal(err)
+		// resultRow, err := json.Marshal(ansrows)
+		// logFatal(err)
+		// fmt.Println(string(resultRow))
+		fmt.Println(ansrows.FilePath)
+	}
 }
