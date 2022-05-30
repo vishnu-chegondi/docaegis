@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"database/sql"
+	"fmt"
 	"runtime"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -49,4 +50,12 @@ func InsertFileInfo(values ...interface{}) {
 	logFatal(err)
 	err = tnx.Commit()
 	logFatal(err)
+}
+
+func GetFilesGaurded() {
+	var query string = "SELECT * from file_info"
+	tnx := getTnx()
+	rows, err := tnx.Query(query)
+	logFatal(err)
+	fmt.Print(rows)
 }
