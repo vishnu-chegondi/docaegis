@@ -1,37 +1,22 @@
 # DocAegis
 
-DocAegis is cli tool to protect your directories from accidental termination.
+DocAegis is cli tool to protect your files/directories from accidental termination in linux and MacOs. It recreates the files/directories which are gaurded by docaegis when deleted.
 
-## Planning
+### Usage
 
-* database
-* list
-* gaurd
+Run below command to get all the usage details. All the other command requires **sudo** permissions to work.
 
-### start(later):
+```
+docaegis -h
+```
 
- Start sub-command runs a daemon process to check regularly all the directories.
+### Working
 
+* When you gaurd any file, a hard link will be created in **.aegis** directory of the file location and all the file info will be stored inside **SQLLite** database at /var/lib/docaegis.db location in linux.
+* When running restore command, all the information stored in SQlite database along with hardlink will be used to restore the file data and permissions.
+* When running list it will list all the files which are gaured using the SQLite database.
 
-### database
+### TODO:
 
-Sqlite database to store the directories information
-
-### list
-
-To list all the directories and files which are guarded.
-
-
-### gaurd: 
-- **Input:** Sub command which takes input as path to directory/file which should be protected from deleting.
-- **Working:** Create a hidden directory *.aegis* in the base directory of given file/directory.
-- **How:** When a user deletes the directory by mistake we need to run recover subcommand to recreate the directory.
-
-
-## File info
-
-* filename
-* permissions
-* ownership
-
-These data needs to be stored in database.
+* Gaurd all the files in the directory.
+* Start sub-command runs a daemon process to check regularly all the directories and run restore to recreate all the files deleted.
