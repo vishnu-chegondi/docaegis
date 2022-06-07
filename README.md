@@ -1,6 +1,5 @@
 # DocAegis
 
-
 DocAegis is cli tool to protect your files/directories from accidental termination in linux and MacOs. It recreates the files/directories along with permissions which are guarded by docaegis when deleted.
 
 
@@ -18,14 +17,11 @@ docaegis -h
 
 ## Working
 
-
-
 ### docaegis guard
 
 **Flags**: -s --source string source_path which should be guarded
 
 The ```docaegis guard -s source_path``` command will guard your files/directories in source_path. Under the hood when you guard any source path, hard links will be created in **.aegis** directory for all the files in source_path and all the files/directories info will be stored inside **SQLLite** database at **/var/lib/docaegis.db**.
-
 
 e.g.
 
@@ -41,9 +37,7 @@ drwxr-xr-x   6 vishnuchegondi  staff   192 Jun  7 17:34 directory
 
 **Flags**: -f --file string source_path which should be restored
 
-
 The ```docaegis restore -f /source/directory``` command will restore your files/directories which are guarded with docaegis. Under the hood when running restore command, all the information stored in SQlite database along with hardlinks will be used to restore the the file data and permissions in the source path.
-
 
 ``` sh
 docaegis restore -f /source/directory
