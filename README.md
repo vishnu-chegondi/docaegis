@@ -1,8 +1,12 @@
 # DocAegis
 
-DocAegis is cli tool to protect your files/directories from accidental termination in linux and MacOs. It recreates the files/directories which are gaurded by docaegis when deleted.
+DocAegis is cli tool to protect your files/directories from accidental termination in linux and MacOs. It recreates the files/directories along with permissions which are gaurded by docaegis when deleted.
 
-### Usage
+Install the docaegis with the command ```go install github.com/vishnu-chegondi/docaegis@latest```. Go will install the package in your ```$GOPATH/bin``` directory which should be in ```$PATH```.
+
+Once Installed you should have the ```docaegis``` command available.
+
+## Usage
 
 Run below command to get all the usage details. All the other command requires **sudo** permissions to work.
 
@@ -10,12 +14,36 @@ Run below command to get all the usage details. All the other command requires *
 docaegis -h
 ```
 
-### Working
+## Working
 
-* When you gaurd any file, a hard link will be created in **.aegis** directory of the file location and all the file info will be stored inside **SQLLite** database at /var/lib/docaegis.db location in linux.
-* When running restore command, all the information stored in SQlite database along with hardlink will be used to restore the file data and permissions.
-* When running list it will list all the files which are gaured using the SQLite database.
 
-### TODO:
+### docaegis gaurd
 
-* Start sub-command runs a daemon process to check regularly all the directories and run restore to recreate all the files deleted.
+**Flags**: -s --source string source_path which should be gaurded
+
+The ```docaegis gaurd -s source_path``` command will gaurd your files/directories in source_path. Under the hood when you gaurd any source path, hard links will be created in **.aegis** directory for all the files in source_path and all the files/directories info will be stored inside **SQLLite** database at **/var/lib/docaegis.db**.
+
+e.g.
+
+``` sh
+docaegis gaurd -s /source/directory
+ls -lart /source/*
+drw-r--r--  40 root            staff  1280 Jun  7 17:34 .aegis
+drwxr-xr-x   6 vishnuchegondi  staff   192 Jun  7 17:34 directory
+```
+
+### docaegis restore
+
+**Flags**: -f --file string source_path which should be restored
+
+The ```docaegis restore -f /source/directory``` command will restore your files/directories which are gaurded with docaegis. Under the hood when running restore command, all the information stored in SQlite database along with hardlinks will be used to restore the the file data and permissions in the source path.
+
+``` sh
+docaegis restore -f /source/directory
+```
+
+### docaegis list
+
+The ```docaegis list``` command will list all the source_paths which are gaurded using docaegis.
+
+Developed by @vishnu-chegondi
