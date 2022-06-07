@@ -9,6 +9,7 @@ import (
 )
 
 type FileInfoRow struct {
+	SourcePath   string
 	FilePath     string
 	HardLinkPath string
 	Permissions  int
@@ -18,7 +19,7 @@ type FileInfoRow struct {
 
 func (f *FileInfoRow) GetFileRowArray() []interface{} {
 	var columnArray []interface{}
-	columnArray = append(columnArray, &f.FilePath, &f.HardLinkPath, &f.Permissions, &f.UID, &f.GID)
+	columnArray = append(columnArray, &f.SourcePath, &f.FilePath, &f.HardLinkPath, &f.Permissions, &f.UID, &f.GID)
 	return columnArray
 }
 
@@ -49,7 +50,7 @@ func getTnx() *sql.Tx {
 
 // Used for creating the initial Table where data is stored regarding
 func CreateTable() {
-	var query string = "CREATE TABLE IF NOT EXISTS file_info (file_path TEXT PRIMARY_KEY,hard_link_path TEXT NOT NULL,permissions INTEGER DEFAULT 644, uid INTEGER DEFAULT 0, gid INTEGER DEFAULT 0)"
+	var query string = "CREATE TABLE IF NOT EXISTS file_info (source_path TEXT NOT NULL, file_path TEXT PRIMARY_KEY,hard_link_path TEXT NOT NULL,permissions INTEGER DEFAULT 644, uid INTEGER DEFAULT 0, gid INTEGER DEFAULT 0)"
 	tnx := getTnx()
 	_, err := tnx.Exec(query)
 	logFatal(err)
@@ -58,7 +59,7 @@ func CreateTable() {
 }
 
 func InsertFileInfo(values ...interface{}) {
-	var query string = "INSERT INTO file_info (file_path, hard_link_path, permissions, uid, gid) VALUES (?,?,?,?,?)"
+	var query string = "INSERT INTO file_info (source_path, file_path, hard_link_path, permissions, uid, gid) VALUES (?,?,?,?,?,?)"
 	tnx := getTnx()
 	_, err := tnx.Exec(query, values...)
 	logFatal(err)
@@ -67,7 +68,7 @@ func InsertFileInfo(values ...interface{}) {
 }
 
 func GetAllFilesGaurded() {
-	var query string = "SELECT file_path from file_info"
+	var query string = "SELECT distinct(source_path) from file_info"
 	tnx := getTnx()
 	rows, err := tnx.Query(query)
 	logFatal(err)
@@ -79,10 +80,10 @@ func GetAllFilesGaurded() {
 	}
 }
 
-func GetFileInfo(filePath string) FileInfoRow {
-	var query string = "SELECT * from file_info where file_path=?"
+func GetFileInfo(sourcePath string) FileInfoRow {
+	var query string = "SELECT * from file_info where source_path=?"
 	tnx := getTnx()
-	row := tnx.QueryRow(query, filePath)
+	row := tnx.QueryRow(query, sourcePath)
 	var ansrows FileInfoRow
 	columnArray := ansrows.GetFileRowArray()
 	err := row.Scan(columnArray...)

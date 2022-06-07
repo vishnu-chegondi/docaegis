@@ -27,8 +27,8 @@ var restoreCmd = &cobra.Command{
 	},
 }
 
-func recoverFromLink(path string) {
-	var fileInfo FileInfoRow = GetFileInfo(path)
+func recoverFromLink(sourcePath string) {
+	var fileInfo FileInfoRow = GetFileInfo(sourcePath)
 	byteData, err := os.ReadFile(fileInfo.HardLinkPath)
 	logFatal(err)
 	err = os.WriteFile(fileInfo.FilePath, byteData, fs.FileMode(fileInfo.Permissions))
