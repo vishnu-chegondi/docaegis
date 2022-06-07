@@ -16,14 +16,14 @@ var sourcePath string
 func init() {
 	CreateTable()
 	CreateDirTable()
-	rootCmd.AddCommand(gaurdCmd)
-	source := gaurdCmd.Flags()
-	source.StringVarP(&sourcePath, "source", "s", "", "File/Directory which should be gaurded")
+	rootCmd.AddCommand(guardCmd)
+	source := guardCmd.Flags()
+	source.StringVarP(&sourcePath, "source", "s", "", "File/Directory which should be guarded")
 	cobra.MarkFlagRequired(source, "source")
 }
 
-var gaurdCmd = &cobra.Command{
-	Use:   "gaurd",
+var guardCmd = &cobra.Command{
+	Use:   "guard",
 	Short: "Protect the given file/directory from accidental termination",
 	Long:  "This creates the hardlinks to given directory or file.",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -43,7 +43,7 @@ func createLinks() {
 	}
 }
 
-// Get List of files to be gaurded looping
+// Get List of files to be guarded looping
 // internal directories
 func GetFilesInSource(path string) []string {
 	var filesList []string

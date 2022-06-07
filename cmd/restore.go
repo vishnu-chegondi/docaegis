@@ -21,7 +21,7 @@ var restoreCmd = &cobra.Command{
 	Use:   "restore",
 	Short: "Restore accidentally deleted files",
 	Long: `This command is used to restore accidentally deleted
-		files from hard links created using gaurd sub command`,
+		files from hard links created using guard sub command`,
 	Run: func(cmd *cobra.Command, args []string) {
 		recoverDirectories(restorePath)
 		recoverFromLink(restorePath)

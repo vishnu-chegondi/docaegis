@@ -100,7 +100,7 @@ func InsertDirectoryInfo(values ...interface{}) {
 	logFatal(err)
 }
 
-func GetAllFilesGaurded() {
+func GetAllFilesGuarded() {
 	var query string = "SELECT distinct(source_path) from file_info"
 	tnx := getTnx()
 	rows, err := tnx.Query(query)
