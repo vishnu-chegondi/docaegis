@@ -8,15 +8,15 @@ func init() {
 
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "List all gaurded folders",
-	Long:  `Get the gaurded list of directories and files from sqllite database`,
+	Short: "List all guarded folders",
+	Long:  `Get the guarded list of directories and files from sqllite database`,
 	Run: func(cmd *cobra.Command, args []string) {
-		listGaurdedFiles()
+		listguardedFiles()
 	},
 }
 
 // Function to connect to database and list all the
-// gaurded files which are gaurded
-func listGaurdedFiles() {
-	GetAllFilesGaurded()
+// guarded files which are guarded
+func listguardedFiles() {
+	GetAllFilesguarded()
 }
