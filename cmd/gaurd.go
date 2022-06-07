@@ -15,6 +15,7 @@ var sourcePath string
 
 func init() {
 	CreateTable()
+	CreateDirTable()
 	rootCmd.AddCommand(gaurdCmd)
 	source := gaurdCmd.Flags()
 	source.StringVarP(&sourcePath, "source", "s", "", "File/Directory which should be gaurded")
@@ -34,22 +35,20 @@ func createLinks() {
 	// Get the source path
 	sourcePath, err := filepath.Abs(sourcePath)
 	logFatal(err)
-
-	// Get List of files to be gaurded looping
-	// internal directories
 	filesList := GetFilesInSource(sourcePath)
 
-	// For each file create hardLinks and return
-	// source, file, hardlink and permissions
 	for index, filePath := range filesList {
 		hardLink, permissions, uid, gid := createHardLink(index, filePath)
 		InsertFileInfo(sourcePath, filePath, hardLink, permissions, uid, gid)
 	}
 }
 
+// Get List of files to be gaurded looping
+// internal directories
 func GetFilesInSource(path string) []string {
 	var filesList []string
 	if isDirectory(path) {
+		storeDirectoryInfo(path)
 		dirFiles := getFilesInPath(path)
 		for _, file := range dirFiles {
 			fileName := filepath.Join(path, file.Name())
@@ -78,6 +77,8 @@ func isDirectory(path string) bool {
 	return sourceFile.IsDir()
 }
 
+// For each file create hardLinks and return
+// source, file, hardlink and permissions
 func createHardLink(index int, filePath string) (string, int, int, int) {
 	sourcePath, err := filepath.Abs(sourcePath)
 	logFatal(err)
@@ -106,4 +107,11 @@ func GetFileData(path string) (int, int, int) {
 	uid := int(fileInfo.Sys().(*syscall.Stat_t).Uid)
 	gid := int(fileInfo.Sys().(*syscall.Stat_t).Gid)
 	return permissions, uid, gid
+}
+
+func storeDirectoryInfo(path string) {
+	sourcePath, err := filepath.Abs(sourcePath)
+	logFatal(err)
+	permissions, uid, gid := GetFileData(path)
+	InsertDirectoryInfo(sourcePath, path, permissions, uid, gid)
 }
