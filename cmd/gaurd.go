@@ -94,23 +94,10 @@ func createHardLink(index int, filePath string) (string, int, int, int) {
 
 func createIfNotExists(directory string) {
 	if _, err := os.Stat(directory); errors.Is(err, os.ErrNotExist) {
-		err = os.Mkdir(directory, 0644)
+		err = os.MkdirAll(directory, 0644)
 		logFatal(err)
 	}
 }
-
-// func getHardLinkPath(path string) string {
-// 	pwd := filepath.Dir(path)
-// 	aegisPath, err := filepath.Abs(pwd + "/.aegis/")
-// 	logFatal(err)
-// 	if _, err := os.Stat(aegisPath); errors.Is(err, os.ErrNotExist) {
-// 		err = os.Mkdir(aegisPath, 0644)
-// 		logFatal(err)
-// 	}
-// 	basePath := filepath.Base(path)
-// 	hardLinkPath := aegisPath + "/" + basePath
-// 	return hardLinkPath
-// }
 
 func GetFileData(path string) (int, int, int) {
 	fileInfo, err := os.Stat(path)
@@ -120,14 +107,3 @@ func GetFileData(path string) (int, int, int) {
 	gid := int(fileInfo.Sys().(*syscall.Stat_t).Gid)
 	return permissions, uid, gid
 }
-
-// func insertFileDetails(path string) {
-// 	fileInfo, err := os.Stat(path)
-// 	logFatal(err)
-// 	file_path := path
-// 	hard_link := getHardLinkPath(path)
-// 	permissions := int(fileInfo.Mode())
-// 	gid := int(fileInfo.Sys().(*syscall.Stat_t).Gid)
-// 	uid := int(fileInfo.Sys().(*syscall.Stat_t).Uid)
-// 	InsertFileInfo(file_path, hard_link, permissions, uid, gid)
-// }

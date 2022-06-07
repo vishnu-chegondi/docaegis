@@ -3,6 +3,7 @@ package cmd
 import (
 	"io/fs"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -31,6 +32,7 @@ func recoverFromLink(sourcePath string) {
 	var fileInfo FileInfoRow = GetFileInfo(sourcePath)
 	byteData, err := os.ReadFile(fileInfo.HardLinkPath)
 	logFatal(err)
+	createIfNotExists(filepath.Dir(fileInfo.FilePath))
 	err = os.WriteFile(fileInfo.FilePath, byteData, fs.FileMode(fileInfo.Permissions))
 	logFatal(err)
 	file, err := os.Open(fileInfo.FilePath)
