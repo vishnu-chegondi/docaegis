@@ -18,5 +18,4 @@ docaegis -h
 
 ### TODO:
 
-* Gaurd all the files in the directory.
 * Start sub-command runs a daemon process to check regularly all the directories and run restore to recreate all the files deleted.
