@@ -1,5 +1,8 @@
 # DocAegis
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/vishnu-chegondi/docaegis.svg)](https://pkg.go.dev/github.com/vishnu-chegondi/docaegis)   [![Generic badge](https://img.shields.io/badge/download-docaegis-green.svg)](https://github.com/vishnu-chegondi/docaegis/releases/tag/v1.0.0)
+
+
 DocAegis is cli tool to protect your files/directories from accidental termination in linux and MacOs. It recreates the files/directories along with permissions which are guarded by docaegis when deleted.
 
 
